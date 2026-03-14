@@ -181,19 +181,28 @@
   "roles": [
     {
       "id": "r1",
-      "name": "Supervisor",
+      "name": "Sumo",
       "color": "#003DA5"
     },
     {
       "id": "r2",
-      "name": "Backup",
+      "name": "Presidente(a)",
       "color": "#C5A84B"
     },
     {
       "id": "r3",
-      "name": "Miembro",
+      "name": "Consejero(a)",
       "color": "#27ae60"
+    },
+    {
+      "id": "r29",
+      "name": "Secretario(a)",
+      "color": "#888888"
     }
   ],
-  "idCounter": 28
+  "idCounter": 30,
+  "orgCharts": [],
+  "poolEmptyIcon": "👨",
+  "pageTitle": "Sistema de Asignaciones",
+  "poolHint": "Arrastra hacia cualquier módulo."
 }
