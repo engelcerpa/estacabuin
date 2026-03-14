@@ -175,7 +175,7 @@ header h1 small{display:block;font-family:'Source Sans 3',sans-serif;font-weight
 .add-chapel-btn:hover{border-color:var(--navy-mid);color:var(--navy);background:var(--navy-pale);}
 
 /* ── MODALS ── */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,20,60,.55);backdrop-filter:blur(6px);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,20,60,.55);backdrop-filter:blur(6px);z-index:600;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s;}
 .modal-overlay.active{opacity:1;pointer-events:all;}
 .modal{background:var(--white);border-radius:15px;padding:24px;width:100%;max-width:430px;box-shadow:var(--shadow-lg);transform:translateY(18px);transition:transform .22s;max-height:90vh;overflow-y:auto;}
 .modal-overlay.active .modal{transform:translateY(0);}
@@ -210,7 +210,7 @@ header h1 small{display:block;font-family:'Source Sans 3',sans-serif;font-weight
 .rpi-info small{font-size:.7rem;color:var(--text-muted);}
 
 /* Storage panel */
-.panel-overlay{position:fixed;inset:0;background:rgba(0,20,60,.5);backdrop-filter:blur(5px);z-index:400;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s;}
+.panel-overlay{position:fixed;inset:0;background:rgba(0,20,60,.5);backdrop-filter:blur(5px);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s;}
 .panel-overlay.active{opacity:1;pointer-events:all;}
 .panel-box{background:var(--white);border-radius:16px;width:100%;max-width:460px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg);transform:translateY(18px);transition:transform .22s;}
 .panel-overlay.active .panel-box{transform:translateY(0);}
@@ -313,6 +313,7 @@ header h1 small{display:block;font-family:'Source Sans 3',sans-serif;font-weight
       <span id="current-user-name">—</span>
       <span class="role-tag" id="current-user-role-tag">—</span>
     </div>
+    <button class="user-menu-btn" onclick="openMyPassword()" title="Cambiar mi contraseña">🔑</button>
     <button class="user-menu-btn" onclick="doLogout()" title="Cambiar usuario">↩ Salir</button>
     <button class="btn btn-outline btn-sm" onclick="openStoragePanel()">💾 Datos</button>
   </div>
@@ -434,6 +435,55 @@ header h1 small{display:block;font-family:'Source Sans 3',sans-serif;font-weight
   </div>
 </div>
 
+<!-- ══ EDIT USER MODAL ═══════════════════════════ -->
+<div class="modal-overlay" id="edit-user-modal" onclick="if(event.target===this)closeModal('edit-user-modal')">
+  <div class="modal" style="max-width:370px;">
+    <div class="modal-title">✏️ <span>Editar Usuario</span></div>
+    <input type="hidden" id="eu-id">
+    <div class="field"><label>Nombre de usuario</label><input id="eu-user" placeholder="Nombre..."></div>
+    <div class="field">
+      <label>Rol / Permiso</label>
+      <select id="eu-role">
+        <option value="admin">Administración total</option>
+        <option value="editor">Modificar</option>
+        <option value="viewer">Solo ver</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Módulos visibles</label>
+      <div id="eu-modules-check" style="display:flex;flex-direction:column;gap:5px;margin-top:4px;"></div>
+    </div>
+    <div class="login-error" id="eu-error" style="display:none;"></div>
+    <div class="modal-actions" style="flex-wrap:wrap;gap:6px;">
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('edit-user-modal')" style="flex:0 0 auto;">Cancelar</button>
+      <button class="btn btn-outline btn-sm" style="background:var(--navy-pale);color:var(--navy);border:1px solid var(--gray-200);flex:0 0 auto;"
+        onclick="openChangePasswordModal(document.getElementById('eu-id').value, false)">🔑 Cambiar contraseña</button>
+      <button class="btn btn-gold btn-sm" onclick="saveEditUser()" style="flex:1;justify-content:center;">Guardar cambios</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CHANGE PASSWORD MODAL ════════════════════ -->
+<div class="modal-overlay" id="change-pass-modal" onclick="if(event.target===this)closeModal('change-pass-modal')">
+  <div class="modal" style="max-width:360px;">
+    <div class="modal-title">🔑 <span>Cambiar Contraseña</span></div>
+    <p class="modal-subtitle">Usuario: <strong id="cp-title-name"></strong></p>
+    <input type="hidden" id="cp-id">
+    <input type="hidden" id="cp-require-old">
+    <div class="field" id="cp-old-row">
+      <label>Contraseña actual</label>
+      <input id="cp-old" type="password" placeholder="Tu contraseña actual">
+    </div>
+    <div class="field"><label>Nueva contraseña</label><input id="cp-new" type="password" placeholder="Mínimo 4 caracteres"></div>
+    <div class="field"><label>Confirmar nueva contraseña</label><input id="cp-new2" type="password" placeholder="Repite la nueva"></div>
+    <div class="login-error" id="cp-error" style="display:none;"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('change-pass-modal')">Cancelar</button>
+      <button class="btn btn-gold" onclick="saveChangePassword()">Actualizar</button>
+    </div>
+  </div>
+</div>
+
 <!-- ══ USERS PANEL ═══════════════════════════════ -->
 <div class="panel-overlay" id="users-panel" onclick="if(event.target===this)closePanelOverlay('users-panel')">
   <div class="panel-box">
@@ -474,10 +524,15 @@ header h1 small{display:block;font-family:'Source Sans 3',sans-serif;font-weight
       <div class="panel-section">
         <div class="panel-section-title">📦 Exportar / Importar JSON</div>
         <div class="panel-actions">
-          <button class="btn btn-gold btn-sm" onclick="exportJSON()">⬇ Exportar .json</button>
+          <button class="btn btn-gold btn-sm" onclick="exportJSON()">⬇ Exportar datos.json</button>
+          <button class="btn btn-navy btn-sm" onclick="actualizarJSON()" title="Sobreescribe el datos.json con los datos actuales">🔄 Actualizar JSON</button>
           <button class="btn btn-ghost btn-sm" onclick="triggerImportFile()">⬆ Importar .json</button>
         </div>
-        <div class="panel-info">Exporta todos los datos a un archivo portable. Guárdalo en la misma carpeta que el HTML para cargarlo automáticamente la próxima vez.</div>
+        <div class="panel-info">
+          <strong>Exportar</strong> descarga <code>datos.json</code> con todos los datos actuales.<br>
+          <strong>Actualizar JSON</strong> hace lo mismo pero con un aviso claro para que reemplaces el archivo anterior.<br>
+          Guarda el archivo en la misma carpeta que el HTML para carga automática en GitHub Pages.
+        </div>
       </div>
       <div class="panel-section">
         <div class="panel-section-title">☁️ Google Drive</div>
@@ -536,12 +591,46 @@ let gdriveFileId= localStorage.getItem('ldsApp_gdriveFileId')||null;
 let gapiReady   = false;
 
 // ══════════════════════════════════════════════
-// STARTUP — show load screen first
+// STARTUP
 // ══════════════════════════════════════════════
+const JSON_FILENAME = 'datos.json'; // ← nombre del archivo JSON en la misma carpeta
+
 function init() {
-  // Always show load screen first so user can load JSON
   updateLoadLogo();
   document.getElementById('load-screen').style.display = 'flex';
+
+  // Si corre en servidor web (GitHub Pages, Netlify, http://) intenta cargar JSON automáticamente
+  if (location.protocol === 'http:' || location.protocol === 'https:') {
+    setLoadStatus('⏳ Buscando datos.json automáticamente…', '#C5A84B');
+    fetch(JSON_FILENAME + '?t=' + Date.now())
+      .then(r => {
+        if (!r.ok) throw new Error('No encontrado');
+        return r.json();
+      })
+      .then(data => {
+        if (!data.persons || !data.modules) throw new Error('Formato inválido');
+        state = data;
+        if (!state.roles) state.roles = [...DEFAULT_ROLES];
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        setLoadStatus('✅ datos.json cargado automáticamente', '#27ae60');
+        setTimeout(goToLogin, 800);
+      })
+      .catch(() => {
+        setLoadStatus('📂 No se encontró datos.json — carga el archivo manualmente', '#8896BA');
+      });
+  }
+}
+
+function setLoadStatus(msg, color) {
+  let el = document.getElementById('load-status');
+  if (!el) {
+    el = document.createElement('p');
+    el.id = 'load-status';
+    el.style.cssText = 'font-size:.78rem;margin-top:12px;transition:color .3s;';
+    document.querySelector('.load-box').appendChild(el);
+  }
+  el.textContent = msg;
+  el.style.color = color || 'var(--text-muted)';
 }
 
 function handleLoadDrop(e) {
@@ -1190,8 +1279,12 @@ function deletePerson(id){
 // ══════════════════════════════════════════════
 function openUsersPanel(){
   if(!isAdmin()){showToast('⚠ Solo administradores');return;}
-  renderUsersList();
-  document.getElementById('users-panel').classList.add('active');
+  // Close storage panel first so users panel is visible
+  closePanelOverlay('storage-panel');
+  setTimeout(()=>{
+    renderUsersList();
+    document.getElementById('users-panel').classList.add('active');
+  }, 200);
 }
 
 function renderUsersList(){
@@ -1202,11 +1295,15 @@ function renderUsersList(){
   state.users.forEach(u=>{
     const labels={admin:'Admin',editor:'Editor',viewer:'Solo ver'};
     const classes={admin:'role-admin',editor:'role-editor',viewer:'role-viewer'};
+    const isMe = u.id === currentUser?.id;
     const row=document.createElement('div'); row.className='user-row';
     row.innerHTML=`
-      <div class="user-row-name">👤 ${esc(u.username)}</div>
+      <div class="user-row-name">👤 ${esc(u.username)}${isMe?' <span style="font-size:.68rem;color:var(--text-muted);">(tú)</span>':''}</div>
       <span class="user-row-role-tag ${classes[u.role]||'role-viewer'}">${labels[u.role]||u.role}</span>
-      ${u.id!==currentUser?.id?`<button class="btn btn-danger btn-xs" onclick="deleteUser('${u.id}')">Eliminar</button>`:'<span style="font-size:.7rem;color:var(--text-muted);">(tú)</span>'}
+      <div style="display:flex;gap:5px;flex-shrink:0;">
+        <button class="btn btn-ghost btn-xs" onclick="openEditUserModal('${u.id}')">✏️ Editar</button>
+        ${!isMe?`<button class="btn btn-danger btn-xs" onclick="deleteUser('${u.id}')">✕</button>`:''}
+      </div>
     `;
     body.appendChild(row);
   });
@@ -1214,6 +1311,12 @@ function renderUsersList(){
   const btn=document.createElement('button');
   btn.className='btn btn-gold btn-sm'; btn.textContent='＋ Nuevo usuario'; btn.onclick=openNewUserModal;
   footer.appendChild(btn);
+
+  // Also add "change my password" button for current user
+  const myBtn=document.createElement('button');
+  myBtn.className='btn btn-ghost btn-sm'; myBtn.textContent='🔑 Mi contraseña';
+  myBtn.onclick=()=>openChangePasswordModal(currentUser.id, false);
+  footer.appendChild(myBtn);
 }
 
 function openNewUserModal(){
@@ -1227,7 +1330,84 @@ function openNewUserModal(){
     lbl.innerHTML=`<input type="checkbox" value="${m.id}" checked style="accent-color:var(--navy);"> ${esc(m.name)}`;
     cont.appendChild(lbl);
   });
-  openModal('new-user-modal');
+  // Close users panel, open modal
+  closePanelOverlay('users-panel');
+  setTimeout(()=>openModal('new-user-modal'), 200);
+}
+
+// Edit existing user (admin only)
+function openEditUserModal(uid){
+  const u = state.users.find(u=>u.id===uid); if(!u)return;
+  document.getElementById('eu-id').value = uid;
+  document.getElementById('eu-user').value = u.username;
+  document.getElementById('eu-role').value = u.role;
+  document.getElementById('eu-error').style.display='none';
+  // Build module checkboxes
+  const cont=document.getElementById('eu-modules-check'); cont.innerHTML='';
+  state.modules.forEach(m=>{
+    const lbl=document.createElement('label');
+    lbl.style.cssText='display:flex;align-items:center;gap:7px;font-size:.8rem;cursor:pointer;';
+    const checked=(u.modules||[]).includes(m.id)||u.role==='admin';
+    lbl.innerHTML=`<input type="checkbox" value="${m.id}" ${checked?'checked':''} style="accent-color:var(--navy);"> ${esc(m.name)}`;
+    cont.appendChild(lbl);
+  });
+  closePanelOverlay('users-panel');
+  setTimeout(()=>openModal('edit-user-modal'), 200);
+}
+
+function saveEditUser(){
+  const uid  = document.getElementById('eu-id').value;
+  const user = document.getElementById('eu-user').value.trim();
+  const role = document.getElementById('eu-role').value;
+  const err  = document.getElementById('eu-error');
+  err.style.display='none';
+  if(!user){err.textContent='El nombre no puede estar vacío';err.style.display='block';return;}
+  if(state.users.find(u=>u.username===user && u.id!==uid)){err.textContent='Ese nombre ya está en uso';err.style.display='block';return;}
+  const u=state.users.find(u=>u.id===uid); if(!u)return;
+  u.username=user; u.role=role;
+  u.modules=[...document.querySelectorAll('#eu-modules-check input:checked')].map(i=>i.value);
+  // If editing self, update badge
+  if(uid===currentUser?.id){ currentUser=u; updateUserBadge(); }
+  saveAll();
+  closeModal('edit-user-modal');
+  setTimeout(()=>{ renderUsersList(); openUsersPanel(); },200);
+  showToast('Usuario actualizado ✓');
+}
+
+// Change password modal — works for self (requireOld=true) or admin editing others (requireOld=false)
+function openChangePasswordModal(uid, requireOld=true){
+  document.getElementById('cp-id').value = uid;
+  document.getElementById('cp-require-old').value = requireOld ? '1' : '0';
+  document.getElementById('cp-old').value='';
+  document.getElementById('cp-new').value='';
+  document.getElementById('cp-new2').value='';
+  document.getElementById('cp-error').style.display='none';
+  const oldRow=document.getElementById('cp-old-row');
+  oldRow.style.display = requireOld ? 'block' : 'none';
+  const u=state.users.find(u=>u.id===uid);
+  document.getElementById('cp-title-name').textContent = u ? u.username : '';
+  closePanelOverlay('users-panel');
+  closeModal('edit-user-modal');
+  setTimeout(()=>openModal('change-pass-modal'), 220);
+}
+
+function saveChangePassword(){
+  const uid        = document.getElementById('cp-id').value;
+  const requireOld = document.getElementById('cp-require-old').value === '1';
+  const oldPass    = document.getElementById('cp-old').value;
+  const newPass    = document.getElementById('cp-new').value;
+  const newPass2   = document.getElementById('cp-new2').value;
+  const err        = document.getElementById('cp-error');
+  err.style.display='none';
+  const u=state.users.find(u=>u.id===uid);
+  if(!u)return;
+  if(requireOld && u.passHash!==hashPass(oldPass)){err.textContent='Contraseña actual incorrecta';err.style.display='block';return;}
+  if(!newPass||newPass.length<4){err.textContent='Mínimo 4 caracteres';err.style.display='block';return;}
+  if(newPass!==newPass2){err.textContent='Las contraseñas no coinciden';err.style.display='block';return;}
+  u.passHash=hashPass(newPass);
+  saveAll();
+  closeModal('change-pass-modal');
+  showToast('🔑 Contraseña actualizada ✓');
 }
 
 function saveNewUser(){
@@ -1237,16 +1417,24 @@ function saveNewUser(){
   const err=document.getElementById('nu-error');
   err.style.display='none';
   if(!user||!pass){err.textContent='Completa todos los campos';err.style.display='block';return;}
+  if(pass.length<4){err.textContent='Mínimo 4 caracteres';err.style.display='block';return;}
   if(state.users.find(u=>u.username===user)){err.textContent='Ese usuario ya existe';err.style.display='block';return;}
   const modules=[...document.querySelectorAll('#nu-modules-check input:checked')].map(i=>i.value);
   state.users.push({id:'u'+(++state.idCounter),username:user,passHash:hashPass(pass),role,modules});
-  saveAll(); closeModal('new-user-modal'); renderUsersList(); showToast('Usuario creado ✓');
+  saveAll(); closeModal('new-user-modal');
+  setTimeout(()=>{ renderUsersList(); openUsersPanel(); },200);
+  showToast('Usuario creado ✓');
 }
 
 function deleteUser(id){
   if(!confirm('¿Eliminar este usuario?'))return;
   state.users=state.users.filter(u=>u.id!==id);
   saveAll(); renderUsersList();
+}
+
+// Any logged-in user can change their own password from the header
+function openMyPassword(){
+  openChangePasswordModal(currentUser.id, true);
 }
 
 // ══════════════════════════════════════════════
@@ -1355,9 +1543,21 @@ function exportJSON(){
   const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
-  a.download=`asignaciones-lds-${new Date().toISOString().slice(0,10)}.json`;
+  a.download='datos.json';
   a.click();
-  showToast('📦 JSON descargado — guárdalo en la misma carpeta que el HTML');
+  showToast('📦 datos.json descargado — guárdalo junto al HTML');
+}
+
+function actualizarJSON(){
+  // Trigger download with same fixed name, browser will ask to replace if already exists
+  saveAll(); // ensure localStorage is fresh too
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download='datos.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('🔄 datos.json actualizado — reemplaza el archivo anterior con este');
 }
 function triggerImportFile(){ document.getElementById('import-file-input').click(); }
 function handleImportFile(e){
