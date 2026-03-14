@@ -1,0 +1,189 @@
+{
+  "logoImg": "",
+  "headerTitle": "Sistema de Asignaciones",
+  "headerSubtitle": "La Iglesia de Jesucristo SUD",
+  "sidebarTitle": "📋 Banco de Personas",
+  "persons": [],
+  "modules": [
+    {
+      "id": "mod1",
+      "name": "Sumo Consejo",
+      "chapels": {
+        "current": [
+          {
+            "id": "ch2",
+            "name": "Barrio Norte",
+            "extraSlots": []
+          },
+          {
+            "id": "ch3",
+            "name": "Barrio Sur",
+            "extraSlots": []
+          },
+          {
+            "id": "ch4",
+            "name": "Barrio Centro",
+            "extraSlots": []
+          },
+          {
+            "id": "ch5",
+            "name": "Barrio Este",
+            "extraSlots": []
+          },
+          {
+            "id": "ch6",
+            "name": "Barrio Oeste",
+            "extraSlots": []
+          },
+          {
+            "id": "ch7",
+            "name": "Barrio Parque",
+            "extraSlots": []
+          }
+        ],
+        "proposed": [
+          {
+            "id": "ch8",
+            "name": "Barrio Norte",
+            "extraSlots": []
+          },
+          {
+            "id": "ch9",
+            "name": "Barrio Sur",
+            "extraSlots": []
+          },
+          {
+            "id": "ch10",
+            "name": "Barrio Centro",
+            "extraSlots": []
+          },
+          {
+            "id": "ch11",
+            "name": "Barrio Este",
+            "extraSlots": []
+          },
+          {
+            "id": "ch12",
+            "name": "Barrio Oeste",
+            "extraSlots": []
+          },
+          {
+            "id": "ch13",
+            "name": "Barrio Parque",
+            "extraSlots": []
+          }
+        ]
+      },
+      "assignments": {},
+      "boardTitles": {
+        "current": "Asignaciones vigentes",
+        "proposed": "Nueva propuesta"
+      }
+    },
+    {
+      "id": "mod14",
+      "name": "Organizaciones",
+      "chapels": {
+        "current": [
+          {
+            "id": "ch15",
+            "name": "Barrio Norte",
+            "extraSlots": []
+          },
+          {
+            "id": "ch16",
+            "name": "Barrio Sur",
+            "extraSlots": []
+          },
+          {
+            "id": "ch17",
+            "name": "Barrio Centro",
+            "extraSlots": []
+          },
+          {
+            "id": "ch18",
+            "name": "Barrio Este",
+            "extraSlots": []
+          },
+          {
+            "id": "ch19",
+            "name": "Barrio Oeste",
+            "extraSlots": []
+          },
+          {
+            "id": "ch20",
+            "name": "Barrio Parque",
+            "extraSlots": []
+          }
+        ],
+        "proposed": [
+          {
+            "id": "ch21",
+            "name": "Barrio Norte",
+            "extraSlots": []
+          },
+          {
+            "id": "ch22",
+            "name": "Barrio Sur",
+            "extraSlots": []
+          },
+          {
+            "id": "ch23",
+            "name": "Barrio Centro",
+            "extraSlots": []
+          },
+          {
+            "id": "ch24",
+            "name": "Barrio Este",
+            "extraSlots": []
+          },
+          {
+            "id": "ch25",
+            "name": "Barrio Oeste",
+            "extraSlots": []
+          },
+          {
+            "id": "ch26",
+            "name": "Barrio Parque",
+            "extraSlots": []
+          }
+        ]
+      },
+      "assignments": {},
+      "boardTitles": {
+        "current": "Asignaciones vigentes",
+        "proposed": "Nueva propuesta"
+      }
+    }
+  ],
+  "users": [
+    {
+      "id": "u27",
+      "username": "engelcerpa",
+      "passHash": "za9p5r",
+      "role": "admin",
+      "modules": [
+        "mod1",
+        "mod14"
+      ]
+    }
+  ],
+  "roles": [
+    {
+      "id": "r1",
+      "name": "Supervisor",
+      "color": "#003DA5"
+    },
+    {
+      "id": "r2",
+      "name": "Backup",
+      "color": "#C5A84B"
+    },
+    {
+      "id": "r3",
+      "name": "Miembro",
+      "color": "#27ae60"
+    }
+  ],
+  "idCounter": 27
+}
